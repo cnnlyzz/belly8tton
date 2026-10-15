@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>獨立咖啡廳品牌認知調查</title>
+    <style>
+        :root {
+            --acid-green: #C6E739;
+            --acid-green-hover: #B5D62B;
+            --bg-color: #F4F6F0;
+            --card-bg: #FFFFFF;
+            --text-black: #000000;
+            --text-muted: #666666;
+            --border-black: #000000;
+            --shadow-black: 4px 4px 0px #000000;
+            --shadow-small: 2px 2px 0px #000000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-black);
+            margin: 0;
+            padding: 20px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .app-card {
+            max-width: 440px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 2.5px solid var(--border-black);
+            border-radius: 28px;
+            box-shadow: var(--shadow-black);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-card {
+            background-color: var(--acid-green);
+            color: var(--text-black);
+            padding: 28px 20px 22px 20px;
+            text-align: center;
+            border-bottom: 2.5px solid var(--border-black);
+        }
+
+        .header-tag {
+            display: inline-block;
+            background: #FFFFFF;
+            color: #000000;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1.5px solid #000000;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-small);
+        }
+
+        .header-title {
+            font-size: 1.45rem;
+            font-weight: 900;
+            margin: 0 0 6px 0;
+        }
+
+        .header-subtitle {
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.9;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .content-body { padding: 20px 16px; }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text-black);
+            background: var(--acid-green);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border-black);
+            box-shadow: var(--shadow-small);
+            margin: 22px 0 12px 0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            background: #FFFFFF;
+            padding: 14px;
+            border-radius: 16px;
+            border: 2px solid var(--border-black);
+            box-shadow: var(--shadow-small);
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-black);
+            line-height: 1.35;
+        }
+
+        .sub-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border-black);
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-black);
+            box-sizing: border-box;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-black);
+            background: #F8F8F8;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-black);
+        }
+
+        .option-item:hover { background: var(--acid-green); }
+        .option-item input { margin-right: 10px; accent-color: #000000; width: 16px; height: 16px; }
+
+        .btn-submit {
+            background-color: var(--acid-green);
+            color: var(--text-black);
+            border: 2.5px solid var(--border-black);
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: var(--shadow-black);
+            margin-top: 20px;
+        }
+
+        .btn-submit:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+
+        .thank-you-box {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .thank-you-box h2 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <div class="header-card">
+        <div class="header-tag">belly8tton RESEARCH</div>
+        <h1 class="header-title">獨立咖啡廳品牌認知調查</h1>
+        <p class="header-subtitle">感謝您參與調查！您的意見將協助我們了解消費者對獨立咖啡廳的偏好。</p>
+    </div>
+
+    <div class="content-body" id="formContainer">
+        <form id="surveyForm">
+            <!-- 壹、咖啡廳消費行為 -->
+            <div class="section-title">01 / 咖啡廳消費行為</div>
+            
+            <div class="form-group">
+                <label>1. 請問您平常是否有到咖啡廳消費的習慣？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="entry.908373874" value="是" checked> 是</label>
+                    <label class="option-item"><input type="radio" name="entry.908373874" value="否"> 否</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>2. 您最常在咖啡廳購買的飲品？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="entry.909664102" value="美式咖啡"> 美式咖啡</label>
+                    <label class="option-item"><input type="checkbox" name="entry.909664102" value="拿鐵"> 拿鐵</label>
+                    <label class="option-item"><input type="checkbox" name="entry.909664102" value="調味拿鐵（蜂蜜、榛果等）"> 調味拿鐵（蜂蜜、榛果等）</label>
+                    <label class="option-item"><input type="checkbox" name="entry.909664102" value="調味黑咖啡（西西里、柚香、蜂蜜等）"> 調味黑咖啡（西西里、柚香、蜂蜜等）</label>
+                    <label class="option-item"><input type="checkbox" name="entry.909664102" value="低咖啡因（可可、奶茶、紅茶、抹茶等）"> 低咖啡因（可可、奶茶、紅茶、抹茶等）</label>
+                    <label class="option-item"><input type="checkbox" name="entry.909664102" value="無咖啡因（牛奶、果汁）"> 無咖啡因（牛奶、果汁）</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>3. 請問您平均一週到咖啡廳消費的頻率？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="entry.234849812" value="0次"> 0次</label>
+                    <label class="option-item"><input type="radio" name="entry.234849812" value="1-2次" checked> 1-2次</label>
+                    <label class="option-item"><input type="radio" name="entry.234849812" value="3-4次"> 3-4次</label>
+                    <label class="option-item"><input type="radio" name="entry.234849812" value="5-6次"> 5-6次</label>
+                    <label class="option-item"><input type="radio" name="entry.234849812" value="7次以上"> 7次以上</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>4. 過去一年中，平均一次到咖啡廳的消費金額？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="entry.899025462" value="100元以下"> 100元以下</label>
+                    <label class="option-item"><input type="radio" name="entry.899025462" value="100-200元" checked> 100-200元</label>
+                    <label class="option-item"><input type="radio" name="entry.899025462" value="200-300元"> 200-300元</label>
+                    <label class="option-item"><input type="radio" name="entry.899025462" value="300-400元"> 300-400元</label>
+                    <label class="option-item"><input type="radio" name="entry.899025462" value="400元以上"> 400元以上</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>5. 請問您最常到咖啡廳消費的時段？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="entry.169638011" value="平日上午"> 平日上午</label>
+                    <label class="option-item"><input type="checkbox" name="entry.169638011" value="平日下午"> 平日下午</label>
+                    <label class="option-item"><input type="checkbox" name="entry.169638011" value="平日晚上"> 平日晚上</label>
+                    <label class="option-item"><input type="checkbox" name="entry.169638011" value="假日上午"> 假日上午</label>
+                    <label class="option-item"><input type="checkbox" name="entry.169638011" value="假日下午"> 假日下午</label>
+                    <label class="option-item"><input type="checkbox" name="entry.169638011" value="假日晚上"> 假日晚上</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>6. 請問您前往咖啡廳的主要目的為何？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="entry.1791026071" value="喝咖啡吃甜點"> 喝咖啡吃甜點</label>
+                    <label class="option-item"><input type="checkbox" name="entry.1791026071" value="辦公或讀書"> 辦公或讀書</label>
+                    <label class="option-item"><input type="checkbox" name="entry.1791026071" value="拍照打卡"> 拍照打卡</label>
+                    <label class="option-item"><input type="checkbox" name="entry.1791026071" value="跟朋友聚會"> 跟朋友聚會</label>
+                    <label class="option-item"><input type="checkbox" name="entry.1791026071" value="打發時間"> 打發時間</label>
+                </div>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="submitToGoogleForm()">提交問卷 ➔</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 背景靜默提交至 Google 表單後台 Endpoint
+    const FORM_ACTION_URL = "
