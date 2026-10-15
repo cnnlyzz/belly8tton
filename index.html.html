@@ -196,6 +196,22 @@
         .btn-primary:active { transform: scale(0.98); }
         .btn-primary:hover { background-color: #2FA99B; }
 
+        .btn-secondary {
+            background: #FFF;
+            border: 1.5px solid var(--border-color);
+            color: var(--midnight-blue);
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         /* 機票卡片 UI */
         .boarding-ticket {
             display: none;
@@ -321,6 +337,11 @@
             box-shadow: 0 8px 18px rgba(12, 97, 112, 0.3);
         }
         .go-form-btn:hover { background-color: #084954; }
+
+        /* steps */
+        .step { display: none; }
+        .step.active { display: block; }
+
     </style>
 </head>
 <body>
@@ -335,250 +356,299 @@
     <div class="content-body">
         
         <form id="surveyForm">
-            
-            <!-- 乘客基礎資訊 -->
-            <div class="section-title">🎫 乘客登機資訊</div>
-            <div class="form-group">
-                <label for="passengerName">乘客姓名 / 暱稱 (Name)</label>
-                <input type="text" id="passengerName" placeholder="請輸入姓名或暱稱" required>
-            </div>
+            <!-- We'll split the survey into steps. -->
 
-            <!-- 壹、咖啡廳行為 -->
-            <div class="section-title">☕ 壹、咖啡廳消費行為</div>
-            
-            <div class="form-group">
-                <label>1. 請問您平常是否有到咖啡廳消費的習慣？</label>
-                <div class="radio-group">
-                    <label class="option-item"><input type="radio" name="c_habit" value="是" checked> 是</label>
-                    <label class="option-item"><input type="radio" name="c_habit" value="否"> 否</label>
+            <!-- STEP 0: 乘客資訊 -->
+            <div class="step active" data-step="0" id="step-0">
+                <div class="section-title">🎫 乘客登機資訊</div>
+                <div class="form-group">
+                    <label for="passengerName">乘客姓名 / 暱稱 (Name)</label>
+                    <input type="text" id="passengerName" placeholder="請輸入姓名或暱稱" required>
+                </div>
+                <div class="nav-buttons">
+                    <button type="button" class="btn-primary" onclick="nextStep()">下一步 ➔</button>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>2. 您最常在咖啡廳購買的飲品？(至多三項)</label>
-                <div class="checkbox-group">
-                    <label class="option-item"><input type="checkbox" name="c_drink" value="美式咖啡"> 美式咖啡</label>
-                    <label class="option-item"><input type="checkbox" name="c_drink" value="拿鐵"> 拿鐵</label>
-                    <label class="option-item"><input type="checkbox" name="c_drink" value="調味拿鐵"> 調味拿鐵 (蜂蜜、榛果等)</label>
-                    <label class="option-item"><input type="checkbox" name="c_drink" value="調味咖啡"> 調味咖啡 (西西里、柚香等)</label>
-                    <label class="option-item"><input type="checkbox" name="c_drink" value="低咖啡因"> 低咖啡因 (可可、抹茶等)</label>
-                    <label class="option-item"><input type="checkbox" name="c_drink" value="無咖啡因"> 無咖啡因 (牛奶、果汁)</label>
+            <!-- STEP 1: Coffee shop spending habits -->
+            <div class="step" data-step="1" id="step-1">
+                <div class="section-title">☕ 壹、咖啡廳消費行為</div>
+
+                <div class="form-group">
+                    <label>1. 請問您平常是否有到咖啡廳消費的習慣？</label>
+                    <div class="radio-group">
+                        <label class="option-item"><input type="radio" name="c_habit" value="是" checked onchange="toggleCoffeeDetails(true)"> 是</label>
+                        <label class="option-item"><input type="radio" name="c_habit" value="否" onchange="toggleCoffeeDetails(false)"> 否</label>
+                    </div>
+                </div>
+
+                <div id="c_details">
+                    <div class="form-group">
+                        <label>2. 您最常在咖啡廳購買的飲品？(至多三項)</label>
+                        <div class="checkbox-group">
+                            <label class="option-item"><input type="checkbox" name="c_drink" value="美式咖啡"> 美式咖啡</label>
+                            <label class="option-item"><input type="checkbox" name="c_drink" value="拿鐵"> 拿鐵</label>
+                            <label class="option-item"><input type="checkbox" name="c_drink" value="調味拿鐸"> 調味拿鐸 (蜂蜜、榛果等)</label>
+                            <label class="option-item"><input type="checkbox" name="c_drink" value="調味咖啡"> 調味咖啡 (西西里、柚香等)</label>
+                            <label class="option-item"><input type="checkbox" name="c_drink" value="低咖啡因"> 低咖啡因 (可可、抹茶等)</label>
+                            <label class="option-item"><input type="checkbox" name="c_drink" value="無咖啡因"> 無咖啡因 (牛奶、果汁)</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>3. 請問您平均一週到咖啡廳消費的頻率？</label>
+                        <select id="c_freq">
+                            <option value="0-2次">0-2 次</option>
+                            <option value="3-4次">3-4 次</option>
+                            <option value="4-5次">4-5 次</option>
+                            <option value="5次以上">5 次以上</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>4. 過去一年中，平均一次到咖啡廳的消費金額？</label>
+                        <select id="c_price">
+                            <option value="100元以下">100 元以下</option>
+                            <option value="100-200元">100-200 元</option>
+                            <option value="200-300元">200-300 元</option>
+                            <option value="300-400元">300-400 元</option>
+                            <option value="400元以上">400 元以上</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>5. 請問您最常到咖啡廳消費的時段？(至多三項)</label>
+                        <div class="checkbox-group">
+                            <label class="option-item"><input type="checkbox" name="c_time" value="平日上午"> 平日上午 (9:00~11:59)</label>
+                            <label class="option-item"><input type="checkbox" name="c_time" value="平日下午"> 平日下午 (12:00~17:59)</label>
+                            <label class="option-item"><input type="checkbox" name="c_time" value="平日晚上"> 平日晚上 (18:00~23:00)</label>
+                            <label class="option-item"><input type="checkbox" name="c_time" value="假日上午"> 假日上午</label>
+                            <label class="option-item"><input type="checkbox" name="c_time" value="假日下午"> 假日下午</label>
+                            <label class="option-item"><input type="checkbox" name="c_time" value="假日晚上"> 假日晚上</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>6. 前往咖啡廳的主要目的？(至多三項)</label>
+                        <div class="checkbox-group">
+                            <label class="option-item"><input type="checkbox" name="c_purpose" value="喝咖啡吃甜點"> 喝咖啡吃甜點</label>
+                            <label class="option-item"><input type="checkbox" name="c_purpose" value="辦公或讀書"> 辦公或讀書</label>
+                            <label class="option-item"><input type="checkbox" name="c_purpose" value="拍照打卡"> 拍照打卡</label>
+                            <label class="option-item"><input type="checkbox" name="c_purpose" value="跟朋友聚會"> 跟朋友聚會</label>
+                            <label class="option-item"><input type="checkbox" name="c_purpose" value="打發時間"> 打發時間</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">◂ 返回</button>
+                    <button type="button" class="btn-primary" onclick="nextStep()">下一步 ➔</button>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>3. 請問您平均一週到咖啡廳消費的頻率？</label>
-                <select id="c_freq">
-                    <option value="0-2次">0-2 次</option>
-                    <option value="3-4次">3-4 次</option>
-                    <option value="4-5次">4-5 次</option>
-                    <option value="5次以上">5 次以上</option>
-                </select>
-            </div>
+            <!-- STEP 2: Filtered coffee purchasing behavior -->
+            <div class="step" data-step="2" id="step-2">
+                <div class="section-title">📦 貳、濾掛式咖啡行為</div>
+                <div class="form-group">
+                    <label>1. 平常有自行沖泡咖啡的習慣嗎？</label>
+                    <select id="d_habit">
+                        <option value="經常">經常</option>
+                        <option value="偶爾">偶爾</option>
+                        <option value="從不">從不</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>4. 過去一年中，平均一次到咖啡廳的消費金額？</label>
-                <select id="c_price">
-                    <option value="100元以下">100 元以下</option>
-                    <option value="100-200元">100-200 元</option>
-                    <option value="200-300元">200-300 元</option>
-                    <option value="300-400元">300-400 元</option>
-                    <option value="400元以上">400 元以上</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>2. 購買過濾掛式咖啡嗎？</label>
+                    <div class="radio-group">
+                        <label class="option-item"><input type="radio" name="d_bought" value="是" checked onchange="toggleDDetails(true)"> 是</label>
+                        <label class="option-item"><input type="radio" name="d_bought" value="否" onchange="toggleDDetails(false)"> 否</label>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label>5. 請問您最常到咖啡廳消費的時段？(至多三項)</label>
-                <div class="checkbox-group">
-                    <label class="option-item"><input type="checkbox" name="c_time" value="平日上午"> 平日上午 (9:00~11:59)</label>
-                    <label class="option-item"><input type="checkbox" name="c_time" value="平日下午"> 平日下午 (12:00~17:59)</label>
-                    <label class="option-item"><input type="checkbox" name="c_time" value="平日晚上"> 平日晚上 (18:00~23:00)</label>
-                    <label class="option-item"><input type="checkbox" name="c_time" value="假日上午"> 假日上午</label>
-                    <label class="option-item"><input type="checkbox" name="c_time" value="假日下午"> 假日下午</label>
-                    <label class="option-item"><input type="checkbox" name="c_time" value="假日晚上"> 假日晚上</label>
+                <div id="d_details">
+                    <div class="form-group">
+                        <label>3. 通常在什麼情況會喝濾掛式咖啡？</label>
+                        <select id="d_scene">
+                            <option value="早餐">早餐</option>
+                            <option value="上班/上課前">上班 / 上課前</option>
+                            <option value="辦公讀書時">辦公讀書時</option>
+                            <option value="在家休息">在家休息</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>4. 願意花多少錢買濾掛式咖啡 (5入裝)？</label>
+                        <select id="d_price">
+                            <option value="100-200元">100-200 元</option>
+                            <option value="200-300元">200-300 元</option>
+                            <option value="300-400元">300-400 元</option>
+                            <option value="400-500元">400-500 元</option>
+                            <option value="500元以上">500 元以上</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">◂ 返回</button>
+                    <button type="button" class="btn-primary" onclick="nextStep()">下一步 ➔</button>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>6. 前往咖啡廳的主要目的？(至多三項)</label>
-                <div class="checkbox-group">
-                    <label class="option-item"><input type="checkbox" name="c_purpose" value="喝咖啡吃甜點"> 喝咖啡吃甜點</label>
-                    <label class="option-item"><input type="checkbox" name="c_purpose" value="辦公或讀書"> 辦公或讀書</label>
-                    <label class="option-item"><input type="checkbox" name="c_purpose" value="拍照打卡"> 拍照打卡</label>
-                    <label class="option-item"><input type="checkbox" name="c_purpose" value="跟朋友聚會"> 跟朋友聚會</label>
-                    <label class="option-item"><input type="checkbox" name="c_purpose" value="打發時間"> 打發時間</label>
+            <!-- STEP 3: Morning coffee behavior -->
+            <div class="step" data-step="3" id="step-3">
+                <div class="section-title">☀️ 參、早上前往咖啡廳行為</div>
+
+                <div class="form-group">
+                    <label>1. 請問您是否會在早上前往咖啡廳消費？</label>
+                    <div class="radio-group">
+                        <label class="option-item"><input type="radio" name="m_go" value="是" checked onclick="toggleMorning(true)"> 是 (續填情境)</label>
+                        <label class="option-item"><input type="radio" name="m_go" value="否" onclick="toggleMorning(false)"> 否 (跳填原因)</label>
+                    </div>
+                </div>
+
+                <div id="m_yes_sec" class="form-group">
+                    <label>2. 平日早上有哪些可能使用咖啡廳的情境？(至多三項)</label>
+                    <div class="checkbox-group">
+                        <label class="option-item"><input type="checkbox" name="m_scene" value="買早餐或咖啡"> 上課前買早餐或咖啡</label>
+                        <label class="option-item"><input type="checkbox" name="m_scene" value="空堂讀書"> 空堂或上課前讀書</label>
+                        <label class="option-item"><input type="checkbox" name="m_scene" value="小組討論"> 小組討論</label>
+                        <label class="option-item"><input type="checkbox" name="m_scene" value="與朋友見面"> 與朋友見面</label>
+                        <label class="option-item"><input type="checkbox" name="m_scene" value="外帶飲品"> 只想買飲品外帶</label>
+                    </div>
+                </div>
+
+                <div id="m_no_sec" class="form-group" style="display:none;">
+                    <label>3. 您早上不選擇咖啡廳的主要原因？</label>
+                    <select id="m_reason">
+                        <option value="直接去學校上課">直接去學校上課</option>
+                        <option value="宿舍已有飲品">家裡或宿舍已有飲品</option>
+                        <option value="價格太高">價格太高</option>
+                        <option value="交通不便">交通不方便</option>
+                        <option value="時間不夠">時間不夠</option>
+                        <option value="早上不喝咖啡">通常早上不喝咖啡</option>
+                    </select>
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">◂ 返回</button>
+                    <button type="button" class="btn-primary" onclick="nextStep()">下一步 ➔</button>
                 </div>
             </div>
 
-            <!-- 貳、濾掛包行為 -->
-            <div class="section-title">📦 貳、濾掛式咖啡行為</div>
-            
-            <div class="form-group">
-                <label>1. 平常有自行沖泡咖啡的習慣嗎？</label>
-                <select id="d_habit">
-                    <option value="經常">經常</option>
-                    <option value="偶爾">偶爾</option>
-                    <option value="從不">從不</option>
-                </select>
-            </div>
+            <!-- STEP 4: Brand experience / Likert for 聲島咖啡 -->
+            <div class="step" data-step="4" id="step-4">
+                <div class="section-title">🏝️ 肆、品牌經驗與多元屬性評估</div>
 
-            <div class="form-group">
-                <label>2. 購買過濾掛式咖啡嗎？</label>
-                <div class="radio-group">
-                    <label class="option-item"><input type="radio" name="d_bought" value="是" checked> 是</label>
-                    <label class="option-item"><input type="radio" name="d_bought" value="否"> 否</label>
+                <div class="form-group">
+                    <label>1. 您是否去過「聲島咖啡」消費過？</label>
+                    <div class="radio-group">
+                        <label class="option-item"><input type="radio" name="exp_sound" value="是" checked onchange="toggleBrand('sound_sec', true)"> 是</label>
+                        <label class="option-item"><input type="radio" name="exp_sound" value="否" onchange="toggleBrand('sound_sec', false)"> 否 (跳過評估)</label>
+                    </div>
+                </div>
+
+                <div id="sound_sec" class="form-group">
+                    <span class="sub-label">請評估對「聲島咖啡」的符合程度 (1非常不同意 ~ 5非常同意)</span>
+                    <table class="likert-table">
+                        <tr><th>項目</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                        <tr><td>地理位置便利</td><td><input type="radio" name="sd_1" value="1"></td><td><input type="radio" name="sd_1" value="2"></td><td><input type="radio" name="sd_1" value="3"></td><td><input type="radio" name="sd_1" value="4"></td><td><input type="radio" name="sd_1" value="5"></td></tr>
+                        <tr><td>餐飲價格合理</td><td><input type="radio" name="sd_2" value="1"></td><td><input type="radio" name="sd_2" value="2"></td><td><input type="radio" name="sd_2" value="3"></td><td><input type="radio" name="sd_2" value="4"></td><td><input type="radio" name="sd_2" value="5"></td></tr>
+                        <tr><td>餐飲風味品質滿意</td><td><input type="radio" name="sd_3" value="1"></td><td><input type="radio" name="sd_3" value="2"></td><td><input type="radio" name="sd_3" value="3"></td><td><input type="radio" name="sd_3" value="4"></td><td><input type="radio" name="sd_3" value="5"></td></tr>
+                        <tr><td>Wi-Fi插座滿足需求</td><td><input type="radio" name="sd_4" value="1"></td><td><input type="radio" name="sd_4" value="2"></td><td><input type="radio" name="sd_4" value="3"></td><td><input type="radio" name="sd_4" value="4"></td><td><input type="radio" name="sd_4" value="5"></td></tr>
+                        <tr><td>不限時感到放鬆</td><td><input type="radio" name="sd_5" value="1"></td><td><input type="radio" name="sd_5" value="2"></td><td><input type="radio" name="sd_5" value="3"></td><td><input type="radio" name="sd_5" value="4"></td><td><input type="radio" name="sd_5" value="5"></td></tr>
+                        <tr><td>裝潢音樂氛圍舒適</td><td><input type="radio" name="sd_6" value="1"></td><td><input type="radio" name="sd_6" value="2"></td><td><input type="radio" name="sd_6" value="3"></td><td><input type="radio" name="sd_6" value="4"></td><td><input type="radio" name="sd_6" value="5"></td></tr>
+                        <tr><td>服務態度滿意</td><td><input type="radio" name="sd_7" value="1"></td><td><input type="radio" name="sd_7" value="2"></td><td><input type="radio" name="sd_7" value="3"></td><td><input type="radio" name="sd_7" value="4"></td><td><input type="radio" name="sd_7" value="5"></td></tr>
+                        <tr><td>非常適合讀書辦公</td><td><input type="radio" name="sd_8" value="1"></td><td><input type="radio" name="sd_8" value="2"></td><td><input type="radio" name="sd_8" value="3"></td><td><input type="radio" name="sd_8" value="4"></td><td><input type="radio" name="sd_8" value="5"></td></tr>
+                        <tr><td>整體消費滿意</td><td><input type="radio" name="sd_9" value="1"></td><td><input type="radio" name="sd_9" value="2"></td><td><input type="radio" name="sd_9" value="3"></td><td><input type="radio" name="sd_9" value="4"></td><td><input type="radio" name="sd_9" value="5"></td></tr>
+                    </table>
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">◂ 返回</button>
+                    <button type="button" class="btn-primary" onclick="nextStep()">下一步 ➔</button>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>3. 通常在什麼情況會喝濾掛式咖啡？</label>
-                <select id="d_scene">
-                    <option value="早餐">早餐</option>
-                    <option value="上班/上課前">上班 / 上課前</option>
-                    <option value="辦公讀書時">辦公讀書時</option>
-                    <option value="在家休息">在家休息</option>
-                </select>
-            </div>
+            <!-- STEP 5: Lifestyle AIO (Likert) -->
+            <div class="step" data-step="5" id="step-5">
+                <div class="section-title">🌿 伍、生活型態</div>
+                <div class="form-group">
+                    <span class="sub-label">請評估下列��述符合程度 (1非常不同意 ~ 5非常同意)</span>
+                    <table class="likert-table">
+                        <tr><th>敘述</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                        <tr><td>受品牌活動(聯名/代言)影響購買</td><td><input type="radio" name="aio_1" value="1"></td><td><input type="radio" name="aio_1" value="2"></td><td><input type="radio" name="aio_1" value="3"></td><td><input type="radio" name="aio_1" value="4"></td><td><input type="radio" name="aio_1" value="5"></td></tr>
+                        <tr><td>喜歡去咖啡廳放鬆</td><td><input type="radio" name="aio_2" value="1"></td><td><input type="radio" name="aio_2" value="2"></td><td><input type="radio" name="aio_2" value="3"></td><td><input type="radio" name="aio_2" value="4"></td><td><input type="radio" name="aio_2" value="5"></td></tr>
+                        <tr><td>咖啡廳作為社交場所</td><td><input type="radio" name="aio_3" value="1"></td><td><input type="radio" name="aio_3" value="2"></td><td><input type="radio" name="aio_3" value="3"></td><td><input type="radio" name="aio_3" value="4"></td><td><input type="radio" name="aio_3" value="5"></td></tr>
+                        <tr><td>認為跑咖是一種流行</td><td><input type="radio" name="aio_4" value="1"></td><td><input type="radio" name="aio_4" value="2"></td><td><input type="radio" name="aio_4" value="3"></td><td><input type="radio" name="aio_4" value="4"></td><td><input type="radio" name="aio_4" value="5"></td></tr>
+                        <tr><td>跑咖已經成為生活一部分</td><td><input type="radio" name="aio_5" value="1"></td><td><input type="radio" name="aio_5" value="2"></td><td><input type="radio" name="aio_5" value="3"></td><td><input type="radio" name="aio_5" value="4"></td><td><input type="radio" name="aio_5" value="5"></td></tr>
+                        <tr><td>不喜歡限時咖啡廳(有壓迫感)</td><td><input type="radio" name="aio_6" value="1"></td><td><input type="radio" name="aio_6" value="2"></td><td><input type="radio" name="aio_6" value="3"></td><td><input type="radio" name="aio_6" value="4"></td><td><input type="radio" name="aio_6" value="5"></td></tr>
+                    </table>
+                </div>
 
-            <div class="form-group">
-                <label>4. 願意花多少錢買濾掛式咖啡 (5入裝)？</label>
-                <select id="d_price">
-                    <option value="100-200元">100-200 元</option>
-                    <option value="200-300元">200-300 元</option>
-                    <option value="300-400元">300-400 元</option>
-                    <option value="400-500元">400-500 元</option>
-                    <option value="500元以上">500 元以上</option>
-                </select>
-            </div>
-
-            <!-- 參、早上前往咖啡廳行為 -->
-            <div class="section-title">☀️ 參、早上前往咖啡廳行為</div>
-            
-            <div class="form-group">
-                <label>1. 請問您是否會在早上前往咖啡廳消費？</label>
-                <div class="radio-group">
-                    <label class="option-item"><input type="radio" name="m_go" value="是" checked onclick="toggleMorning(true)"> 是 (續填情境)</label>
-                    <label class="option-item"><input type="radio" name="m_go" value="否" onclick="toggleMorning(false)"> 否 (跳填原因)</label>
+                <div class="nav-buttons">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">◂ 返回</button>
+                    <button type="button" class="btn-primary" onclick="nextStep()">下一步 ➔</button>
                 </div>
             </div>
 
-            <div id="m_yes_sec" class="form-group">
-                <label>2. 平日早上有哪些可能使用咖啡廳的情境？(至多三項)</label>
-                <div class="checkbox-group">
-                    <label class="option-item"><input type="checkbox" name="m_scene" value="買早餐或咖啡"> 上課前買早餐或咖啡</label>
-                    <label class="option-item"><input type="checkbox" name="m_scene" value="空堂讀書"> 空堂或上課前讀書</label>
-                    <label class="option-item"><input type="checkbox" name="m_scene" value="小組討論"> 小組討論</label>
-                    <label class="option-item"><input type="checkbox" name="m_scene" value="與朋友見面"> 與朋友見面</label>
-                    <label class="option-item"><input type="checkbox" name="m_scene" value="外帶飲品"> 只想買飲品外帶</label>
+            <!-- STEP 6: Demographics & interview -->
+            <div class="step" data-step="6" id="step-6">
+                <div class="section-title">👤 陸、乘客基本資料</div>
+
+                <div class="form-group">
+                    <label>1. 性別</label>
+                    <select id="demo_gender">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>2. 年紀</label>
+                    <select id="demo_age">
+                        <option value="18-20">18-20 歲</option>
+                        <option value="21-23">21-23 歲</option>
+                        <option value="23-25">23-25 歲</option>
+                        <option value="26以上">26 歲以上</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo_school">3. 就讀學校中文名稱</label>
+                    <input type="text" id="demo_school" placeholder="例如：輔仁大學">
+                </div>
+
+                <div class="form-group">
+                    <label>4. 可支配所得 (月)</label>
+                    <select id="demo_income">
+                        <option value="5000以下">5,000 以下</option>
+                        <option value="5001~10000">5,001~10,000</option>
+                        <option value="10001~15000">10,001~15,000</option>
+                        <option value="15001~20000">15,001~20,000</option>
+                        <option value="20000以上">20,000 以上</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>5. 您願意接受小組的質化訪談嗎？(提供車馬費與盲抽禮品)</label>
+                    <div class="radio-group">
+                        <label class="option-item"><input type="radio" name="interview" value="是" onchange="toggleInterview(true)"> 是</label>
+                        <label class="option-item"><input type="radio" name="interview" value="否" checked onchange="toggleInterview(false)"> 否</label>
+                    </div>
+                </div>
+
+                <div id="interview_sec" class="form-group" style="display:none;">
+                    <label for="int_email">聯絡 Gmail 郵件</label>
+                    <input type="text" id="int_email" placeholder="example@gmail.com">
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn-secondary" onclick="prevStep()">◂ 返回</button>
+                    <button type="button" class="btn-primary" onclick="generateTicket()">核發專屬登機證 🎫</button>
                 </div>
             </div>
 
-            <div id="m_no_sec" class="form-group" style="display:none;">
-                <label>3. 您早上不選擇咖啡廳的主要原因？</label>
-                <select id="m_reason">
-                    <option value="直接去學校上課">直接去學校上課</option>
-                    <option value="宿舍已有飲品">家裡或宿舍已有飲品</option>
-                    <option value="價格太高">價格太高</option>
-                    <option value="交通不便">交通不方便</option>
-                    <option value="時間不夠">時間不夠</option>
-                    <option value="早上不喝咖啡">通常早上不喝咖啡</option>
-                </select>
-            </div>
-
-            <!-- 肆、多元屬性品牌評估 -->
-            <div class="section-title">🏝️ 肆、品牌經驗與多元屬性評估</div>
-
-            <!-- 聲島咖啡 -->
-            <div class="form-group">
-                <label>1. 您是否去過「聲島咖啡」消費過？</label>
-                <div class="radio-group">
-                    <label class="option-item"><input type="radio" name="exp_sound" value="是" checked onclick="toggleBrand('sound_sec', true)"> 是</label>
-                    <label class="option-item"><input type="radio" name="exp_sound" value="否" onclick="toggleBrand('sound_sec', false)"> 否 (跳過評估)</label>
-                </div>
-            </div>
-
-            <div id="sound_sec" class="form-group">
-                <span class="sub-label">請評估對「聲島咖啡」的符合程度 (1非常不同意 ~ 5非常同意)</span>
-                <table class="likert-table">
-                    <tr><th>項目</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
-                    <tr><td>地理位置便利</td><td><input type="radio" name="sd_1" value="1"></td><td><input type="radio" name="sd_1" value="2"></td><td><input type="radio" name="sd_1" value="3" checked></td><td><input type="radio" name="sd_1" value="4"></td><td><input type="radio" name="sd_1" value="5"></td></tr>
-                    <tr><td>餐飲價格合理</td><td><input type="radio" name="sd_2" value="1"></td><td><input type="radio" name="sd_2" value="2"></td><td><input type="radio" name="sd_2" value="3" checked></td><td><input type="radio" name="sd_2" value="4"></td><td><input type="radio" name="sd_2" value="5"></td></tr>
-                    <tr><td>餐飲風味品質滿意</td><td><input type="radio" name="sd_3" value="1"></td><td><input type="radio" name="sd_3" value="2"></td><td><input type="radio" name="sd_3" value="3" checked></td><td><input type="radio" name="sd_3" value="4"></td><td><input type="radio" name="sd_3" value="5"></td></tr>
-                    <tr><td>Wi-Fi插座滿足需求</td><td><input type="radio" name="sd_4" value="1"></td><td><input type="radio" name="sd_4" value="2"></td><td><input type="radio" name="sd_4" value="3" checked></td><td><input type="radio" name="sd_4" value="4"></td><td><input type="radio" name="sd_4" value="5"></td></tr>
-                    <tr><td>不限時感到放鬆</td><td><input type="radio" name="sd_5" value="1"></td><td><input type="radio" name="sd_5" value="2"></td><td><input type="radio" name="sd_5" value="3" checked></td><td><input type="radio" name="sd_5" value="4"></td><td><input type="radio" name="sd_5" value="5"></td></tr>
-                    <tr><td>裝潢音樂氛圍舒適</td><td><input type="radio" name="sd_6" value="1"></td><td><input type="radio" name="sd_6" value="2"></td><td><input type="radio" name="sd_6" value="3" checked></td><td><input type="radio" name="sd_6" value="4"></td><td><input type="radio" name="sd_6" value="5"></td></tr>
-                    <tr><td>服務態度滿意</td><td><input type="radio" name="sd_7" value="1"></td><td><input type="radio" name="sd_7" value="2"></td><td><input type="radio" name="sd_7" value="3" checked></td><td><input type="radio" name="sd_7" value="4"></td><td><input type="radio" name="sd_7" value="5"></td></tr>
-                    <tr><td>非常適合讀書辦公</td><td><input type="radio" name="sd_8" value="1"></td><td><input type="radio" name="sd_8" value="2"></td><td><input type="radio" name="sd_8" value="3" checked></td><td><input type="radio" name="sd_8" value="4"></td><td><input type="radio" name="sd_8" value="5"></td></tr>
-                    <tr><td>整體消費滿意</td><td><input type="radio" name="sd_9" value="1"></td><td><input type="radio" name="sd_9" value="2"></td><td><input type="radio" name="sd_9" value="3" checked></td><td><input type="radio" name="sd_9" value="4"></td><td><input type="radio" name="sd_9" value="5"></td></tr>
-                </table>
-            </div>
-
-            <!-- 伍、生活型態 AIO (已精準刪除指定兩題) -->
-            <div class="section-title">🌿 伍、生活型態</div>
-            <div class="form-group">
-                <span class="sub-label">請評估下列敘述符合程度 (1非常不同意 ~ 5非常同意)</span>
-                <table class="likert-table">
-                    <tr><th>敘述</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
-                    <tr><td>受品牌活動(聯名/代言)影響購買</td><td><input type="radio" name="aio_1" value="1"></td><td><input type="radio" name="aio_1" value="2"></td><td><input type="radio" name="aio_1" value="3" checked></td><td><input type="radio" name="aio_1" value="4"></td><td><input type="radio" name="aio_1" value="5"></td></tr>
-                    <tr><td>喜歡去咖啡廳放鬆</td><td><input type="radio" name="aio_2" value="1"></td><td><input type="radio" name="aio_2" value="2"></td><td><input type="radio" name="aio_2" value="3" checked></td><td><input type="radio" name="aio_2" value="4"></td><td><input type="radio" name="aio_2" value="5"></td></tr>
-                    <tr><td>咖啡廳作為社交場所</td><td><input type="radio" name="aio_3" value="1"></td><td><input type="radio" name="aio_3" value="2"></td><td><input type="radio" name="aio_3" value="3" checked></td><td><input type="radio" name="aio_3" value="4"></td><td><input type="radio" name="aio_3" value="5"></td></tr>
-                    <tr><td>認為跑咖是一種流行</td><td><input type="radio" name="aio_4" value="1"></td><td><input type="radio" name="aio_4" value="2"></td><td><input type="radio" name="aio_4" value="3" checked></td><td><input type="radio" name="aio_4" value="4"></td><td><input type="radio" name="aio_4" value="5"></td></tr>
-                    <tr><td>跑咖已經成為生活一部分</td><td><input type="radio" name="aio_5" value="1"></td><td><input type="radio" name="aio_5" value="2"></td><td><input type="radio" name="aio_5" value="3" checked></td><td><input type="radio" name="aio_5" value="4"></td><td><input type="radio" name="aio_5" value="5"></td></tr>
-                    <tr><td>不喜歡限時咖啡廳(有壓迫感)</td><td><input type="radio" name="aio_6" value="1"></td><td><input type="radio" name="aio_6" value="2"></td><td><input type="radio" name="aio_6" value="3" checked></td><td><input type="radio" name="aio_6" value="4"></td><td><input type="radio" name="aio_6" value="5"></td></tr>
-                </table>
-            </div>
-
-            <!-- 陸、人口統計與質化訪談 -->
-            <div class="section-title">👤 陸、乘客基本資料</div>
-            
-            <div class="form-group">
-                <label>1. 性別</label>
-                <select id="demo_gender">
-                    <option value="男">男</option>
-                    <option value="女">女</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>2. 年紀</label>
-                <select id="demo_age">
-                    <option value="18-20">18-20 歲</option>
-                    <option value="21-23">21-23 歲</option>
-                    <option value="23-25">23-25 歲</option>
-                    <option value="26以上">26 歲以上</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="demo_school">3. 就讀學校中文名稱</label>
-                <input type="text" id="demo_school" placeholder="例如：輔仁大學">
-            </div>
-
-            <div class="form-group">
-                <label>4. 可支配所得 (月)</label>
-                <select id="demo_income">
-                    <option value="5000以下">5,000 以下</option>
-                    <option value="5001~10000">5,001~10,000</option>
-                    <option value="10001~15000">10,001~15,000</option>
-                    <option value="15001~20000">15,001~20,000</option>
-                    <option value="20000以上">20,000 以上</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>5. 您願意接受小組的質化訪談嗎？(提供車馬費與盲抽禮品)</label>
-                <div class="radio-group">
-                    <label class="option-item"><input type="radio" name="interview" value="是" onclick="toggleInterview(true)"> 是</label>
-                    <label class="option-item"><input type="radio" name="interview" value="否" checked onclick="toggleInterview(false)"> 否</label>
-                </div>
-            </div>
-
-            <div id="interview_sec" class="form-group" style="display:none;">
-                <label for="int_email">聯絡 Gmail 郵件</label>
-                <input type="text" id="int_email" placeholder="example@gmail.com">
-            </div>
-
-            <button type="button" class="btn-primary" onclick="generateTicket()">核發專屬登機證 🎫</button>
         </form>
 
         <!-- 機票 Card -->
@@ -636,6 +706,48 @@
     // 你的 Google 表單連結
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/1AhXVvQZ5awRhUqL1Cxl-fQfketp1IWCeMGU2bb_b95I/edit?ts=6accfea1";
 
+    // step control
+    let currentStep = 0;
+    const totalSteps = 6; // 0..6
+
+    function showStep(n) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        const el = document.querySelector('.step[data-step="' + n + '"]');
+        if (el) el.classList.add('active');
+        currentStep = n;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+        // branching logic examples
+        let next = currentStep + 1;
+
+        // If next step is brand evaluation (4) but user answered exp_sound == '否', skip it
+        if (next === 4) {
+            const exp = document.querySelector('input[name="exp_sound"]:checked');
+            if (exp && exp.value === '否') {
+                next = 5; // skip brand details
+            }
+        }
+
+        // ensure we don't go past final step
+        if (next > totalSteps) next = totalSteps;
+        showStep(next);
+    }
+
+    function prevStep() {
+        let prev = currentStep - 1;
+        if (prev < 0) prev = 0;
+        // If coming back to brand step but exp_sound is '否', skip back accordingly
+        if (prev === 4) {
+            const exp = document.querySelector('input[name="exp_sound"]:checked');
+            if (exp && exp.value === '否') {
+                prev = 3;
+            }
+        }
+        showStep(prev);
+    }
+
     function toggleMorning(isYes) {
         document.getElementById('m_yes_sec').style.display = isYes ? 'block' : 'none';
         document.getElementById('m_no_sec').style.display = isYes ? 'none' : 'block';
@@ -649,12 +761,40 @@
         document.getElementById('interview_sec').style.display = isYes ? 'block' : 'none';
     }
 
+    // Hide/show filtered coffee details if user hasn't bought it
+    function toggleDDetails(isYes) {
+        document.getElementById('d_details').style.display = isYes ? 'block' : 'none';
+    }
+
+    // Hide/show coffee details if user doesn't visit coffee shops
+    function toggleCoffeeDetails(isYes) {
+        document.getElementById('c_details').style.display = isYes ? 'block' : 'none';
+    }
+
+    // When page loads, wire up listeners for initial radios (some radios created after load)
+    document.addEventListener('DOMContentLoaded', function() {
+        // set initial visibility based on defaults
+        const exp = document.querySelector('input[name="exp_sound"]:checked');
+        if (exp && exp.value === '否') toggleBrand('sound_sec', false);
+
+        const db = document.querySelector('input[name="d_bought"]:checked');
+        if (db && db.value === '否') toggleDDetails(false);
+
+        const ch = document.querySelector('input[name="c_habit"]:checked');
+        if (ch && ch.value === '否') toggleCoffeeDetails(false);
+
+        // attach change listeners for radio groups that may be changed by keyboard
+        document.querySelectorAll('input[name="d_bought"]').forEach(r => r.addEventListener('change', function(e){ toggleDDetails(e.target.value === '是'); }));
+        document.querySelectorAll('input[name="c_habit"]').forEach(r => r.addEventListener('change', function(e){ toggleCoffeeDetails(e.target.value === '是'); }));
+        document.querySelectorAll('input[name="exp_sound"]').forEach(r => r.addEventListener('change', function(e){ toggleBrand('sound_sec', e.target.value === '是'); }));
+    });
+
     function generateTicket() {
         const name = document.getElementById('passengerName').value.trim();
 
         if (!name) {
             alert('請輸入您的乘客姓名或暱稱！');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showStep(0);
             return;
         }
 
