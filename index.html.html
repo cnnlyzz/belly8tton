@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>belly8tton Air 肚臍航空 | 聲島登機手續與乘客調查</title>
+    <style>
+        :root {
+            --midnight-blue: #0C6170;
+            --blue-green: #37BEB0;
+            --tiffany-blue: #A4E5E0;
+            --baby-blue: #DBF5F0;
+            --card-bg: #FFFFFF;
+            --text-dark: #1F383C;
+            --text-muted: #6A8E95;
+            --border-color: #E1F3F0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--baby-blue);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .app-card {
+            max-width: 480px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(12, 97, 112, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, var(--midnight-blue) 0%, #084954 100%);
+            color: #FFFFFF;
+            padding: 30px 24px 25px 24px;
+            text-align: center;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+        }
+
+        .header-logo {
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: var(--tiffany-blue);
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: #FFFFFF;
+        }
+
+        .header-subtitle {
+            font-size: 0.85rem;
+            color: var(--tiffany-blue);
+            opacity: 0.9;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .content-body {
+            padding: 24px 20px;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--midnight-blue);
+            border-left: 4px solid var(--blue-green);
+            padding-left: 10px;
+            margin: 25px 0 15px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            background: #F8FCFC;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--midnight-blue);
+            line-height: 1.3;
+        }
+
+        .sub-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: normal;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border-color);
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--blue-green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(55, 190, 176, 0.2);
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.88rem;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .option-item input {
+            margin-right: 8px;
+            accent-color: var(--blue-green);
+        }
+
+        /* 李克特量表表格 */
+        .likert-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.78rem;
+        }
+
+        .likert-table th, .likert-table td {
+            text-align: center;
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .likert-table th {
+            color: var(--midnight-blue);
+            font-weight: 700;
+            background: var(--baby-blue);
+        }
+
+        .likert-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            width: 45%;
+            color: var(--text-dark);
+        }
+
+        .likert-table input[type="radio"] {
+            accent-color: var(--blue-green);
+        }
+
+        .btn-primary {
+            background-color: var(--blue-green);
+            color: #FFFFFF;
+            border: none;
+            padding: 16px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 8px 18px rgba(55, 190, 176, 0.35);
+            margin-top: 20px;
+        }
+
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:hover { background-color: #2FA99B; }
+
+        /* 機票卡片 UI */
+        .boarding-ticket {
+            display: none;
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(12, 97, 112, 0.08);
+            margin-top: 10px;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ticket-header {
+            background-color: var(--midnight-blue);
+            color: #FFFFFF;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-airline {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--tiffany-blue);
+        }
+
+        .ticket-pnr {
+            font-size: 0.75rem;
+            color: #A0D3CB;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .ticket-body { padding: 20px; }
+
+        .route-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #D0ECE7;
+            margin-bottom: 15px;
+        }
+
+        .route-code {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--midnight-blue);
+        }
+
+        .route-city {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .route-arrow {
+            font-size: 0.85rem;
+            color: var(--blue-green);
+            background: var(--baby-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .ticket-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .barcode-section {
+            border-top: 1px dashed #D0ECE7;
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .barcode {
+            height: 38px;
+            background: linear-gradient(90deg, 
+                #1F383C 0%, #1F383C 2%, transparent 2%, transparent 4%,
+                #1F383C 4%, #1F383C 7%, transparent 7%, transparent 8%,
+                #1F383C 8%, #1F383C 12%, transparent 12%, transparent 15%,
+                #1F383C 15%, #1F383C 16%, transparent 16%, transparent 20%,
+                #1F383C 20%, #1F383C 25%, transparent 25%, transparent 27%,
+                #1F383C 27%, #1F383C 30%, transparent 30%, transparent 32%,
+                #1F383C 32%, #1F383C 38%, transparent 38%, transparent 42%,
+                #1F383C 42%, #1F383C 45%, transparent 45%, transparent 50%,
+                #1F383C 50%, #1F383C 55%, transparent 55%, transparent 60%,
+                #1F383C 60%, #1F383C 68%, transparent 68%, transparent 72%,
+                #1F383C 72%, #1F383C 78%, transparent 78%, transparent 82%,
+                #1F383C 82%, #1F383C 100%);
+            margin: 8px 0;
+            border-radius: 2px;
+        }
+
+        .go-form-btn {
+            background-color: var(--midnight-blue);
+            margin-top: 15px;
+            box-shadow: 0 8px 18px rgba(12, 97, 112, 0.3);
+        }
+        .go-form-btn:hover { background-color: #084954; }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <div class="header-card">
+        <div class="header-logo">✈️ BELLY8TTON AIR</div>
+        <h1 class="header-title">聲島登機手續調查</h1>
+        <p class="header-subtitle">歡迎搭乘 Belly8tton Air，請完成登機資訊並領取前往「聲島 Sound Island」的登機證！</p>
+    </div>
+
+    <div class="content-body">
+        
+        <form id="surveyForm">
+            
+            <!-- 乘客基礎資訊 -->
+            <div class="section-title">🎫 乘客登機資訊</div>
+            <div class="form-group">
+                <label for="passengerName">乘客姓名 / 暱稱 (Name)</label>
+                <input type="text" id="passengerName" placeholder="請輸入姓名或暱稱" required>
+            </div>
+
+            <!-- 壹、咖啡廳行為 -->
+            <div class="section-title">☕ 壹、咖啡廳消費行為</div>
+            
+            <div class="form-group">
+                <label>1. 請問您平常是否有到咖啡廳消費的習慣？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="c_habit" value="是" checked> 是</label>
+                    <label class="option-item"><input type="radio" name="c_habit" value="否"> 否</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>2. 您最常在咖啡廳購買的飲品？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="c_drink" value="美式咖啡"> 美式咖啡</label>
+                    <label class="option-item"><input type="checkbox" name="c_drink" value="拿鐵"> 拿鐵</label>
+                    <label class="option-item"><input type="checkbox" name="c_drink" value="調味拿鐵"> 調味拿鐵 (蜂蜜、榛果等)</label>
+                    <label class="option-item"><input type="checkbox" name="c_drink" value="調味咖啡"> 調味咖啡 (西西里、柚香等)</label>
+                    <label class="option-item"><input type="checkbox" name="c_drink" value="低咖啡因"> 低咖啡因 (可可、抹茶等)</label>
+                    <label class="option-item"><input type="checkbox" name="c_drink" value="無咖啡因"> 無咖啡因 (牛奶、果汁)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>3. 請問您平均一週到咖啡廳消費的頻率？</label>
+                <select id="c_freq">
+                    <option value="0-2次">0-2 次</option>
+                    <option value="3-4次">3-4 次</option>
+                    <option value="4-5次">4-5 次</option>
+                    <option value="5次以上">5 次以上</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>4. 過去一年中，平均一次到咖啡廳的消費金額？</label>
+                <select id="c_price">
+                    <option value="100元以下">100 元以下</option>
+                    <option value="100-200元">100-200 元</option>
+                    <option value="200-300元">200-300 元</option>
+                    <option value="300-400元">300-400 元</option>
+                    <option value="400元以上">400 元以上</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>5. 請問您最常到咖啡廳消費的時段？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="c_time" value="平日上午"> 平日上午 (9:00~11:59)</label>
+                    <label class="option-item"><input type="checkbox" name="c_time" value="平日下午"> 平日下午 (12:00~17:59)</label>
+                    <label class="option-item"><input type="checkbox" name="c_time" value="平日晚上"> 平日晚上 (18:00~23:00)</label>
+                    <label class="option-item"><input type="checkbox" name="c_time" value="假日上午"> 假日上午</label>
+                    <label class="option-item"><input type="checkbox" name="c_time" value="假日下午"> 假日下午</label>
+                    <label class="option-item"><input type="checkbox" name="c_time" value="假日晚上"> 假日晚上</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>6. 前往咖啡廳的主要目的？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="c_purpose" value="喝咖啡吃甜點"> 喝咖啡吃甜點</label>
+                    <label class="option-item"><input type="checkbox" name="c_purpose" value="辦公或讀書"> 辦公或讀書</label>
+                    <label class="option-item"><input type="checkbox" name="c_purpose" value="拍照打卡"> 拍照打卡</label>
+                    <label class="option-item"><input type="checkbox" name="c_purpose" value="跟朋友聚會"> 跟朋友聚會</label>
+                    <label class="option-item"><input type="checkbox" name="c_purpose" value="打發時間"> 打發時間</label>
+                </div>
+            </div>
+
+            <!-- 貳、濾掛包行為 -->
+            <div class="section-title">📦 貳、濾掛式咖啡行為</div>
+            
+            <div class="form-group">
+                <label>1. 平常有自行沖泡咖啡的習慣嗎？</label>
+                <select id="d_habit">
+                    <option value="經常">經常</option>
+                    <option value="偶爾">偶爾</option>
+                    <option value="從不">從不</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>2. 購買過濾掛式咖啡嗎？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="d_bought" value="是" checked> 是</label>
+                    <label class="option-item"><input type="radio" name="d_bought" value="否"> 否</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>3. 通常在什麼情況會喝濾掛式咖啡？</label>
+                <select id="d_scene">
+                    <option value="早餐">早餐</option>
+                    <option value="上班/上課前">上班 / 上課前</option>
+                    <option value="辦公讀書時">辦公讀書時</option>
+                    <option value="在家休息">在家休息</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>4. 願意花多少錢買濾掛式咖啡 (5入裝)？</label>
+                <select id="d_price">
+                    <option value="100-200元">100-200 元</option>
+                    <option value="200-300元">200-300 元</option>
+                    <option value="300-400元">300-400 元</option>
+                    <option value="400-500元">400-500 元</option>
+                    <option value="500元以上">500 元以上</option>
+                </select>
+            </div>
+
+            <!-- 參、早上前往咖啡廳行為 -->
+            <div class="section-title">☀️ 參、早上前往咖啡廳行為</div>
+            
+            <div class="form-group">
+                <label>1. 請問您是否會在早上前往咖啡廳消費？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="m_go" value="是" checked onclick="toggleMorning(true)"> 是 (續填情境)</label>
+                    <label class="option-item"><input type="radio" name="m_go" value="否" onclick="toggleMorning(false)"> 否 (跳填原因)</label>
+                </div>
+            </div>
+
+            <div id="m_yes_sec" class="form-group">
+                <label>2. 平日早上有哪些可能使用咖啡廳的情境？(至多三項)</label>
+                <div class="checkbox-group">
+                    <label class="option-item"><input type="checkbox" name="m_scene" value="買早餐或咖啡"> 上課前買早餐或咖啡</label>
+                    <label class="option-item"><input type="checkbox" name="m_scene" value="空堂讀書"> 空堂或上課前讀書</label>
+                    <label class="option-item"><input type="checkbox" name="m_scene" value="小組討論"> 小組討論</label>
+                    <label class="option-item"><input type="checkbox" name="m_scene" value="與朋友見面"> 與朋友見面</label>
+                    <label class="option-item"><input type="checkbox" name="m_scene" value="外帶飲品"> 只想買飲品外帶</label>
+                </div>
+            </div>
+
+            <div id="m_no_sec" class="form-group" style="display:none;">
+                <label>3. 您早上不選擇咖啡廳的主要原因？</label>
+                <select id="m_reason">
+                    <option value="直接去學校上課">直接去學校上課</option>
+                    <option value="宿舍已有飲品">家裡或宿舍已有飲品</option>
+                    <option value="價格太高">價格太高</option>
+                    <option value="交通不便">交通不方便</option>
+                    <option value="時間不夠">時間不夠</option>
+                    <option value="早上不喝咖啡">通常早上不喝咖啡</option>
+                </select>
+            </div>
+
+            <!-- 肆、多元屬性品牌評估 -->
+            <div class="section-title">🏝️ 肆、品牌經驗與多元屬性評估</div>
+
+            <!-- 聲島咖啡 -->
+            <div class="form-group">
+                <label>1. 您是否去過「聲島咖啡」消費過？</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="exp_sound" value="是" checked onclick="toggleBrand('sound_sec', true)"> 是</label>
+                    <label class="option-item"><input type="radio" name="exp_sound" value="否" onclick="toggleBrand('sound_sec', false)"> 否 (跳過評估)</label>
+                </div>
+            </div>
+
+            <div id="sound_sec" class="form-group">
+                <span class="sub-label">請評估對「聲島咖啡」的符合程度 (1非常不同意 ~ 5非常同意)</span>
+                <table class="likert-table">
+                    <tr><th>項目</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                    <tr><td>地理位置便利</td><td><input type="radio" name="sd_1" value="1"></td><td><input type="radio" name="sd_1" value="2"></td><td><input type="radio" name="sd_1" value="3" checked></td><td><input type="radio" name="sd_1" value="4"></td><td><input type="radio" name="sd_1" value="5"></td></tr>
+                    <tr><td>餐飲價格合理</td><td><input type="radio" name="sd_2" value="1"></td><td><input type="radio" name="sd_2" value="2"></td><td><input type="radio" name="sd_2" value="3" checked></td><td><input type="radio" name="sd_2" value="4"></td><td><input type="radio" name="sd_2" value="5"></td></tr>
+                    <tr><td>餐飲風味品質滿意</td><td><input type="radio" name="sd_3" value="1"></td><td><input type="radio" name="sd_3" value="2"></td><td><input type="radio" name="sd_3" value="3" checked></td><td><input type="radio" name="sd_3" value="4"></td><td><input type="radio" name="sd_3" value="5"></td></tr>
+                    <tr><td>Wi-Fi插座滿足需求</td><td><input type="radio" name="sd_4" value="1"></td><td><input type="radio" name="sd_4" value="2"></td><td><input type="radio" name="sd_4" value="3" checked></td><td><input type="radio" name="sd_4" value="4"></td><td><input type="radio" name="sd_4" value="5"></td></tr>
+                    <tr><td>不限時感到放鬆</td><td><input type="radio" name="sd_5" value="1"></td><td><input type="radio" name="sd_5" value="2"></td><td><input type="radio" name="sd_5" value="3" checked></td><td><input type="radio" name="sd_5" value="4"></td><td><input type="radio" name="sd_5" value="5"></td></tr>
+                    <tr><td>裝潢音樂氛圍舒適</td><td><input type="radio" name="sd_6" value="1"></td><td><input type="radio" name="sd_6" value="2"></td><td><input type="radio" name="sd_6" value="3" checked></td><td><input type="radio" name="sd_6" value="4"></td><td><input type="radio" name="sd_6" value="5"></td></tr>
+                    <tr><td>服務態度滿意</td><td><input type="radio" name="sd_7" value="1"></td><td><input type="radio" name="sd_7" value="2"></td><td><input type="radio" name="sd_7" value="3" checked></td><td><input type="radio" name="sd_7" value="4"></td><td><input type="radio" name="sd_7" value="5"></td></tr>
+                    <tr><td>非常適合讀書辦公</td><td><input type="radio" name="sd_8" value="1"></td><td><input type="radio" name="sd_8" value="2"></td><td><input type="radio" name="sd_8" value="3" checked></td><td><input type="radio" name="sd_8" value="4"></td><td><input type="radio" name="sd_8" value="5"></td></tr>
+                    <tr><td>整體消費滿意</td><td><input type="radio" name="sd_9" value="1"></td><td><input type="radio" name="sd_9" value="2"></td><td><input type="radio" name="sd_9" value="3" checked></td><td><input type="radio" name="sd_9" value="4"></td><td><input type="radio" name="sd_9" value="5"></td></tr>
+                </table>
+            </div>
+
+            <!-- 伍、生活型態 AIO (已精準刪除指定兩題) -->
+            <div class="section-title">🌿 伍、生活型態</div>
+            <div class="form-group">
+                <span class="sub-label">請評估下列敘述符合程度 (1非常不同意 ~ 5非常同意)</span>
+                <table class="likert-table">
+                    <tr><th>敘述</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+                    <tr><td>受品牌活動(聯名/代言)影響購買</td><td><input type="radio" name="aio_1" value="1"></td><td><input type="radio" name="aio_1" value="2"></td><td><input type="radio" name="aio_1" value="3" checked></td><td><input type="radio" name="aio_1" value="4"></td><td><input type="radio" name="aio_1" value="5"></td></tr>
+                    <tr><td>喜歡去咖啡廳放鬆</td><td><input type="radio" name="aio_2" value="1"></td><td><input type="radio" name="aio_2" value="2"></td><td><input type="radio" name="aio_2" value="3" checked></td><td><input type="radio" name="aio_2" value="4"></td><td><input type="radio" name="aio_2" value="5"></td></tr>
+                    <tr><td>咖啡廳作為社交場所</td><td><input type="radio" name="aio_3" value="1"></td><td><input type="radio" name="aio_3" value="2"></td><td><input type="radio" name="aio_3" value="3" checked></td><td><input type="radio" name="aio_3" value="4"></td><td><input type="radio" name="aio_3" value="5"></td></tr>
+                    <tr><td>認為跑咖是一種流行</td><td><input type="radio" name="aio_4" value="1"></td><td><input type="radio" name="aio_4" value="2"></td><td><input type="radio" name="aio_4" value="3" checked></td><td><input type="radio" name="aio_4" value="4"></td><td><input type="radio" name="aio_4" value="5"></td></tr>
+                    <tr><td>跑咖已經成為生活一部分</td><td><input type="radio" name="aio_5" value="1"></td><td><input type="radio" name="aio_5" value="2"></td><td><input type="radio" name="aio_5" value="3" checked></td><td><input type="radio" name="aio_5" value="4"></td><td><input type="radio" name="aio_5" value="5"></td></tr>
+                    <tr><td>不喜歡限時咖啡廳(有壓迫感)</td><td><input type="radio" name="aio_6" value="1"></td><td><input type="radio" name="aio_6" value="2"></td><td><input type="radio" name="aio_6" value="3" checked></td><td><input type="radio" name="aio_6" value="4"></td><td><input type="radio" name="aio_6" value="5"></td></tr>
+                </table>
+            </div>
+
+            <!-- 陸、人口統計與質化訪談 -->
+            <div class="section-title">👤 陸、乘客基本資料</div>
+            
+            <div class="form-group">
+                <label>1. 性別</label>
+                <select id="demo_gender">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>2. 年紀</label>
+                <select id="demo_age">
+                    <option value="18-20">18-20 歲</option>
+                    <option value="21-23">21-23 歲</option>
+                    <option value="23-25">23-25 歲</option>
+                    <option value="26以上">26 歲以上</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="demo_school">3. 就讀學校中文名稱</label>
+                <input type="text" id="demo_school" placeholder="例如：輔仁大學">
+            </div>
+
+            <div class="form-group">
+                <label>4. 可支配所得 (月)</label>
+                <select id="demo_income">
+                    <option value="5000以下">5,000 以下</option>
+                    <option value="5001~10000">5,001~10,000</option>
+                    <option value="10001~15000">10,001~15,000</option>
+                    <option value="15001~20000">15,001~20,000</option>
+                    <option value="20000以上">20,000 以上</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>5. 您願意接受小組的質化訪談嗎？(提供車馬費與盲抽禮品)</label>
+                <div class="radio-group">
+                    <label class="option-item"><input type="radio" name="interview" value="是" onclick="toggleInterview(true)"> 是</label>
+                    <label class="option-item"><input type="radio" name="interview" value="否" checked onclick="toggleInterview(false)"> 否</label>
+                </div>
+            </div>
+
+            <div id="interview_sec" class="form-group" style="display:none;">
+                <label for="int_email">聯絡 Gmail 郵件</label>
+                <input type="text" id="int_email" placeholder="example@gmail.com">
+            </div>
+
+            <button type="button" class="btn-primary" onclick="generateTicket()">核發專屬登機證 🎫</button>
+        </form>
+
+        <!-- 機票 Card -->
+        <div id="ticketCard" class="boarding-ticket">
+            <div class="ticket-header">
+                <span class="ticket-airline">BELLY8TTON AIR</span>
+                <span class="ticket-pnr">FLIGHT: B8-808</span>
+            </div>
+
+            <div class="ticket-body">
+                <div class="route-container">
+                    <div>
+                        <div class="route-code">TPE</div>
+                        <div class="route-city">Taipei</div>
+                    </div>
+                    <div class="route-arrow">✈️ 登島 ➔</div>
+                    <div style="text-align: right;">
+                        <div class="route-code">SSD</div>
+                        <div class="route-city">Sound Island</div>
+                    </div>
+                </div>
+
+                <div class="ticket-grid">
+                    <div>
+                        <div class="info-label">Passenger</div>
+                        <div class="info-value" id="ticketName">-</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Gate</div>
+                        <div class="info-value">GATE 08</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Status</div>
+                        <div class="info-value" style="color:var(--blue-green);">CHECKED-IN</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Seat</div>
+                        <div class="info-value">24C (不限時)</div>
+                    </div>
+                </div>
+
+                <div class="barcode-section">
+                    <div class="barcode"></div>
+                    <div style="font-size:0.65rem; color:var(--text-muted); letter-spacing:1px;">SSD-BELLY8TTON-2026-FORM</div>
+                </div>
+
+                <button class="btn-primary go-form-btn" onclick="redirectToGoogleForm()">登陸聲島！提交問卷 ➔</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // 你的 Google 表單連結
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/1AhXVvQZ5awRhUqL1Cxl-fQfketp1IWCeMGU2bb_b95I/edit?ts=6accfea1";
+
+    function toggleMorning(isYes) {
+        document.getElementById('m_yes_sec').style.display = isYes ? 'block' : 'none';
+        document.getElementById('m_no_sec').style.display = isYes ? 'none' : 'block';
+    }
+
+    function toggleBrand(secId, isYes) {
+        document.getElementById(secId).style.display = isYes ? 'block' : 'none';
+    }
+
+    function toggleInterview(isYes) {
+        document.getElementById('interview_sec').style.display = isYes ? 'block' : 'none';
+    }
+
+    function generateTicket() {
+        const name = document.getElementById('passengerName').value.trim();
+
+        if (!name) {
+            alert('請輸入您的乘客姓名或暱稱！');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        document.getElementById('ticketName').innerText = name;
+        document.getElementById('surveyForm').style.display = 'none';
+        document.getElementById('ticketCard').style.display = 'block';
+    }
+
+    function redirectToGoogleForm() {
+        window.location.href = GOOGLE_FORM_URL;
+    }
+</script>
+
+</body>
+</html>
